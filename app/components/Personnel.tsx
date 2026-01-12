@@ -57,7 +57,16 @@ export default function Personnel({ employeeData }: PersonnelProps) {
   }, [employeeData.skills]);
 
   // Team member data for projects
-  const teamMembers = {
+  interface TeamMember {
+    id: string;
+    name: string;
+    designation: string;
+    avatar: string;
+    status: string;
+    role: string;
+  }
+
+  const teamMembers: Record<string, TeamMember[]> = {
     "PRJ-001": [
       {
         id: "EMP-2026-0456",
