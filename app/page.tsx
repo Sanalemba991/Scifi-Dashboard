@@ -50,6 +50,24 @@ const FloatingHex = () => {
   );
 };
 
+// Loading animation component
+const LoadingAnimation = () => {
+  return (
+    <div className="flex flex-col items-center justify-center h-64">
+      <div className="relative">
+        <div className="w-20 h-20 border-4 border-red-500/30 rounded-full"></div>
+        <div className="absolute top-0 left-0 w-20 h-20 border-4 border-t-red-500 rounded-full animate-spin"></div>
+      </div>
+      <p className="mt-4 text-red-500 text-sm tracking-widest">LOADING SECTION...</p>
+      <div className="mt-2 flex gap-1">
+        <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+        <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+        <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+      </div>
+    </div>
+  );
+};
+
 // Employee data
 const employeeData = {
   id: "EMP-2026-0847",
@@ -170,6 +188,8 @@ export default function Home() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [glitchText, setGlitchText] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isReloading, setIsReloading] = useState(false);
+  const [currentContent, setCurrentContent] = useState("dashboard");
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -193,6 +213,24 @@ export default function Home() {
 
   const formatDate = (date: Date) => {
     return date.toISOString().split("T")[0].replace(/-/g, ".");
+  };
+
+  const handleMenuClick = (menuId: string) => {
+    if (menuId === currentContent) {
+      // If clicking the same menu, show reload effect
+      setIsReloading(true);
+      setTimeout(() => {
+        setIsReloading(false);
+      }, 1200);
+    } else {
+      // If clicking a different menu, show loading then switch content
+      setIsReloading(true);
+      setTimeout(() => {
+        setActiveMenu(menuId);
+        setCurrentContent(menuId);
+        setIsReloading(false);
+      }, 800);
+    }
   };
 
   const renderContent = () => {
@@ -294,7 +332,7 @@ export default function Home() {
               <li key={item.id} className={`fade-in-left stagger-${index + 1}`}>
                 <button
                   onClick={() => {
-                    setActiveMenu(item.id);
+                    handleMenuClick(item.id);
                     setIsSidebarOpen(false); // Close sidebar after selection
                   }}
                   className={`w-full flex items-center gap-3 px-4 py-3 rounded transition-all duration-300 hover-lift cyber-btn ${
@@ -383,8 +421,8 @@ export default function Home() {
         </header>
 
         {/* Dynamic Content with transition */}
-        <div className="fade-in-up" key={activeMenu}>
-          {renderContent()}
+        <div className={`fade-in-up ${isReloading ? 'opacity-50' : ''}`} key={activeMenu}>
+          {isReloading ? <LoadingAnimation /> : renderContent()}
         </div>
 
         {/* Data Stream Footer */}

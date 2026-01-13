@@ -1,45 +1,346 @@
 "use client";
 import { useState, useEffect } from "react";
 
-interface PersonnelProps {
-  employeeData: {
+interface PersonnelData {
+  id: string;
+  name: string;
+  designation: string;
+  department: string;
+  clearanceLevel: string;
+  status: string;
+  bloodType: string;
+  dob: string;
+  height: string;
+  weight: string;
+  eyeColor: string;
+  hairColor: string;
+  nationality: string;
+  joinDate: string;
+  lastActive: string;
+  biometricId: string;
+  skills: Array<{ name: string; level: number }>;
+  certifications: string[];
+  projects: Array<{
     id: string;
     name: string;
-    designation: string;
-    department: string;
-    clearanceLevel: string;
     status: string;
-    bloodType: string;
-    dob: string;
-    height: string;
-    weight: string;
-    eyeColor: string;
-    hairColor: string;
-    nationality: string;
-    joinDate: string;
-    lastActive: string;
-    biometricId: string;
-    skills: Array<{ name: string; level: number }>;
-    certifications: string[];
-    projects: Array<{
-      id: string;
-      name: string;
-      status: string;
-      progress: number;
-      priority: string;
-      deadline: string;
-      team: number;
-      description: string;
-    }>;
-    serviceRecord: Array<{ year: string; event: string }>;
-  };
+    progress: number;
+    priority: string;
+    deadline: string;
+    team: number;
+    description: string;
+  }>;
+  serviceRecord: Array<{ year: string; event: string }>;
 }
 
-export default function Personnel({ employeeData }: PersonnelProps) {
+// Sample data for multiple employees
+const employeesData: PersonnelData[] = [
+  {
+    id: "EMP-2026-0456",
+    name: "LT. MARCUS REED",
+    designation: "TACTICAL SPECIALIST",
+    department: "SECURITY DIVISION",
+    clearanceLevel: "LEVEL 4",
+    status: "ACTIVE",
+    bloodType: "O+",
+    dob: "1985-07-14",
+    height: "6'2\"",
+    weight: "210 lbs",
+    eyeColor: "BROWN",
+    hairColor: "BLACK",
+    nationality: "USA",
+    joinDate: "2015-03-12",
+    lastActive: "2023-11-05 14:32:18",
+    biometricId: "BIO-4A7F9E2C",
+    skills: [
+      { name: "TACTICS", level: 95 },
+      { name: "WEAPONS", level: 88 },
+      { name: "LEADERSHIP", level: 92 },
+      { name: "SURVEILLANCE", level: 85 },
+      { name: "COMMS", level: 78 }
+    ],
+    certifications: ["ELITE OPERATIVE", "ADVANCED TACTICS", "SECURITY CLEARANCE ALPHA"],
+    projects: [
+      {
+        id: "PRJ-001",
+        name: "OPERATION PHOENIX",
+        status: "IN PROGRESS",
+        progress: 78,
+        priority: "CRITICAL",
+        deadline: "2023-12-15",
+        team: 5,
+        description: "High priority infiltration mission in hostile territory to extract critical intelligence assets."
+      },
+      {
+        id: "PRJ-002",
+        name: "FORTRESS UPGRADE",
+        status: "COMPLETED",
+        progress: 100,
+        priority: "HIGH",
+        deadline: "2023-10-30",
+        team: 8,
+        description: "Security system upgrade for primary facility including biometric access and surveillance."
+      }
+    ],
+    serviceRecord: [
+      { year: "2022", event: "Promoted to Tactical Specialist" },
+      { year: "2020", event: "Completed Elite Training Program" },
+      { year: "2018", event: "Received Medal of Distinction" },
+      { year: "2015", event: "Joined Security Division" }
+    ]
+  },
+  {
+    id: "EMP-2026-0789",
+    name: "SGT. LENA CHEN",
+    designation: "COMMS OPERATOR",
+    department: "COMMUNICATIONS",
+    clearanceLevel: "LEVEL 3",
+    status: "ACTIVE",
+    bloodType: "A+",
+    dob: "1990-04-22",
+    height: "5'7\"",
+    weight: "145 lbs",
+    eyeColor: "GREEN",
+    hairColor: "BROWN",
+    nationality: "CANADA",
+    joinDate: "2017-09-08",
+    lastActive: "2023-11-05 16:45:32",
+    biometricId: "BIO-3B6D8F1A",
+    skills: [
+      { name: "COMMUNICATIONS", level: 96 },
+      { name: "ENCRYPTION", level: 91 },
+      { name: "SIGNAL ANALYSIS", level: 88 },
+      { name: "LANGUAGES", level: 82 },
+      { name: "HACKING", level: 75 }
+    ],
+    certifications: ["SIGNAL EXPERT", "ENCRYPTION SPECIALIST", "MULTILINGUAL OPERATOR"],
+    projects: [
+      {
+        id: "PRJ-003",
+        name: "CHANNEL SECURE",
+        status: "IN PROGRESS",
+        progress: 65,
+        priority: "HIGH",
+        deadline: "2023-12-01",
+        team: 4,
+        description: "Development of new encrypted communication protocol for field operations."
+      }
+    ],
+    serviceRecord: [
+      { year: "2021", event: "Promoted to Senior Comms Operator" },
+      { year: "2019", event: "Completed Advanced Encryption Training" },
+      { year: "2017", event: "Joined Communications Division" }
+    ]
+  },
+  {
+    id: "EMP-2026-0321",
+    name: "CPL. DAVID KIM",
+    designation: "WEAPONS SPECIALIST",
+    department: "ARMAMENT DIVISION",
+    clearanceLevel: "LEVEL 3",
+    status: "INJURED",
+    bloodType: "B+",
+    dob: "1992-11-05",
+    height: "5'11\"",
+    weight: "185 lbs",
+    eyeColor: "BLUE",
+    hairColor: "BLONDE",
+    nationality: "USA",
+    joinDate: "2018-06-15",
+    lastActive: "2023-10-28 09:15:42",
+    biometricId: "BIO-5C9E2D7F",
+    skills: [
+      { name: "BALLISTICS", level: 94 },
+      { name: "WEAPONS MAINTENANCE", level: 91 },
+      { name: "MARKSMANSHIP", level: 96 },
+      { name: "EXPLOSIVES", level: 84 },
+      { name: "TACTICS", level: 79 }
+    ],
+    certifications: ["EXPERT MARKSMAN", "ORDNANCE SPECIALIST", "TACTICAL WEAPONS"],
+    projects: [
+      {
+        id: "PRJ-004",
+        name: "WEAPON SYSTEM X",
+        status: "PENDING REVIEW",
+        progress: 92,
+        priority: "MEDIUM",
+        deadline: "2023-11-20",
+        team: 6,
+        description: "Testing and evaluation of next generation weapon system for field deployment."
+      }
+    ],
+    serviceRecord: [
+      { year: "2022", event: "Received Expert Marksman Award" },
+      { year: "2020", event: "Completed Ordnance Specialist Training" },
+      { year: "2018", event: "Joined Armament Division" }
+    ]
+  }
+];
+
+interface PersonnelProps {
+  employeeData?: PersonnelData;
+}
+
+export default function PersonnelList({ employeeData }: PersonnelProps) {
+  const [selectedEmployee, setSelectedEmployee] = useState<PersonnelData | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterDepartment, setFilterDepartment] = useState("ALL");
+  const [filterStatus, setFilterStatus] = useState("ALL");
+
+  // Filter employees based on search and filters
+  const filteredEmployees = employeesData.filter(employee => {
+    const matchesSearch = employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         employee.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         employee.designation.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesDepartment = filterDepartment === "ALL" || employee.department === filterDepartment;
+    const matchesStatus = filterStatus === "ALL" || employee.status === filterStatus;
+    
+    return matchesSearch && matchesDepartment && matchesStatus;
+  });
+
+  // Get unique departments for filter dropdown
+  const departments = ["ALL", ...Array.from(new Set(employeesData.map(emp => emp.department)))];
+  const statuses = ["ALL", ...Array.from(new Set(employeesData.map(emp => emp.status)))];
+
+  // If an employee is selected, render the detailed view
+  if (selectedEmployee) {
+    return <PersonnelDetail employeeData={selectedEmployee} onBack={() => setSelectedEmployee(null)} />;
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="glass rounded-lg p-4 fade-in-down">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <h1 className="text-2xl font-bold text-white tracking-wider flex items-center gap-2">
+            <span className="text-red-400">◈</span> PERSONNEL DATABASE
+          </h1>
+          
+          <div className="flex flex-col sm:flex-row gap-3">
+            {/* Search */}
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search personnel..."
+                className="glass px-4 py-2 rounded text-sm text-white placeholder-gray-500 w-full sm:w-64 focus:outline-none focus:ring-1 focus:ring-red-500"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <span className="absolute right-3 top-2.5 text-gray-500">🔍</span>
+            </div>
+            
+            {/* Department Filter */}
+            <select
+              className="glass px-4 py-2 rounded text-sm text-white focus:outline-none focus:ring-1 focus:ring-red-500"
+              value={filterDepartment}
+              onChange={(e) => setFilterDepartment(e.target.value)}
+            >
+              {departments.map(dept => (
+                <option key={dept} value={dept} className="bg-gray-800">{dept}</option>
+              ))}
+            </select>
+            
+            {/* Status Filter */}
+            <select
+              className="glass px-4 py-2 rounded text-sm text-white focus:outline-none focus:ring-1 focus:ring-red-500"
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+            >
+              {statuses.map(status => (
+                <option key={status} value={status} className="bg-gray-800">{status}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Personnel List */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredEmployees.map((employee, index) => (
+          <div
+            key={employee.id}
+            className="glass glow-border rounded-lg overflow-hidden cursor-pointer transition-all duration-300 hover-lift holographic fade-in-up"
+            onClick={() => setSelectedEmployee(employee)}
+            style={{ animationDelay: `${index * 0.1}s` }}
+          >
+            <div className="bg-gradient-to-r from-red-900/50 to-red-800/30 px-4 py-3 border-b border-red-500/30">
+              <div className="flex items-center justify-between">
+                <span className="text-xs text-red-400 tracking-widest">{employee.id}</span>
+                <span className={`text-xs px-2 py-0.5 rounded ${
+                  employee.status === "ACTIVE" 
+                    ? "bg-green-500/20 text-green-400" 
+                    : employee.status === "INJURED" 
+                    ? "bg-orange-500/20 text-orange-400" 
+                    : "bg-gray-500/20 text-gray-400"
+                }`}>
+                  {employee.status}
+                </span>
+              </div>
+            </div>
+            
+            <div className="p-4">
+              {/* Photo placeholder */}
+              <div className="aspect-[3/4] bg-gradient-to-br from-gray-800 to-gray-900 rounded border-2 border-red-500/50 overflow-hidden relative mb-4">
+                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-red-500/10 to-transparent animate-[scan-line_3s_linear_infinite]" />
+                <svg className="w-full h-full text-gray-700" viewBox="0 0 100 133" fill="currentColor">
+                  <rect width="100" height="133" fill="#1a1a2e" />
+                  <circle cx="50" cy="40" r="25" fill="#2d2d44" />
+                  <ellipse cx="50" cy="100" rx="35" ry="30" fill="#2d2d44" />
+                  <text x="50" y="125" textAnchor="middle" fill="#ff3333" fontSize="6" fontFamily="monospace" className="animate-pulse">CLASSIFIED</text>
+                </svg>
+                <div className="absolute top-2 left-2 w-6 h-6 border-l-2 border-t-2 border-cyan-400 animate-pulse" />
+                <div className="absolute top-2 right-2 w-6 h-6 border-r-2 border-t-2 border-cyan-400 animate-pulse" style={{ animationDelay: '0.25s' }} />
+                <div className="absolute bottom-2 left-2 w-6 h-6 border-l-2 border-b-2 border-cyan-400 animate-pulse" style={{ animationDelay: '0.5s' }} />
+                <div className="absolute bottom-2 right-2 w-6 h-6 border-r-2 border-b-2 border-cyan-400 animate-pulse" style={{ animationDelay: '0.75s' }} />
+              </div>
+              
+              {/* Name and designation */}
+              <h3 className="text-lg text-white font-bold tracking-wider mb-1 hover-glow">{employee.name}</h3>
+              <p className="text-sm text-cyan-400 tracking-wider neon-text-cyan">{employee.designation}</p>
+              <p className="text-xs text-gray-500 mb-3">{employee.department}</p>
+              
+              {/* Quick info */}
+              <div className="grid grid-cols-2 gap-2 mb-3">
+                <div className="glass p-2 rounded text-center">
+                  <p className="text-xs text-gray-500">CLEARANCE</p>
+                  <p className="text-xs text-red-400 font-bold neon-text-red">{employee.clearanceLevel}</p>
+                </div>
+                <div className="glass p-2 rounded text-center">
+                  <p className="text-xs text-gray-500">PROJECTS</p>
+                  <p className="text-xs text-cyan-400 font-bold neon-text-cyan">{employee.projects.length}</p>
+                </div>
+              </div>
+              
+              {/* View details button */}
+              <button className="w-full glass-cyan px-3 py-2 rounded text-xs text-cyan-400 border border-cyan-500/30 hover-scale cyber-btn">
+                VIEW FULL PROFILE →
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+      
+      {filteredEmployees.length === 0 && (
+        <div className="glass rounded-lg p-8 text-center">
+          <p className="text-gray-400">No personnel found matching your criteria.</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Personnel detail component (reusing the original component with a back button)
+function PersonnelDetail({ employeeData, onBack }: { employeeData: PersonnelData; onBack: () => void }) {
   const [selectedProject, setSelectedProject] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"profile" | "projects" | "history">("profile");
   const [scanEffect, setScanEffect] = useState(false);
   const [skillAnimations, setSkillAnimations] = useState<number[]>(employeeData.skills.map(() => 0));
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }, []);
 
   useEffect(() => {
     // Trigger scan effect periodically
@@ -135,6 +436,14 @@ export default function Personnel({ employeeData }: PersonnelProps) {
 
   return (
     <div className="space-y-6">
+      {/* Back button */}
+      <button
+        onClick={onBack}
+        className="glass px-4 py-2 rounded text-sm text-cyan-400 border border-cyan-500/30 hover-scale cyber-btn flex items-center gap-2"
+      >
+        ← BACK TO PERSONNEL LIST
+      </button>
+
       {/* Tab Navigation */}
       <div className="glass rounded-lg p-1 flex gap-1 fade-in-down">
         {[
