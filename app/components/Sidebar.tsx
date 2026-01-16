@@ -1,12 +1,12 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import Dashboard from "./Dashboard";
-import Personnel from "./Personnel";
-import Operations from "./Operations";
-import Analytics from "./Analytics";
-import Communications from "./Communications";
-import Archives from "./Archives";
-import Settings from "./Settings";
+import Dashboard from "../dashboard/Dashboard";
+import Personnel from "../personnellist/PersonnelList";
+import Operations from "../operations/Operations";
+import Analytics from "../analytics/Analytics";
+import Communications from "../communications/Communications";
+import Archives from "../archives/Archives";
+import Settings from "../settings/Settings";
 
 // Particle component for animated background
 const Particles = () => {

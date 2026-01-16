@@ -25,7 +25,7 @@ export default function BiometricLoader() {
           setTimeout(() => {
             setShowLoader(false);
             document.body.style.overflow = 'unset';
-          }, 300); // Reduced from 1000ms to 300ms
+          }, 500); // Reduced from 1000ms to 300ms
           
           return 100;
         }
