@@ -1,10 +1,5 @@
-import Home from "./components/Sidebar";
-import Loader from "./components/Loader";
+import { redirect } from 'next/navigation';
 
 export default function Page() {
-  return (
-    <>
-      <Loader />
-    </>
-  );
+  redirect('/dashboard');
 }

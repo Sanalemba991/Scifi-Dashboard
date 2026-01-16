@@ -1,11 +1,5 @@
 import Operations from "./Operations";
 
-
 export default function Page() {
-  return (
-    <>
-<Operations />
-
-    </>
-  );
+  return <Operations />;
 }

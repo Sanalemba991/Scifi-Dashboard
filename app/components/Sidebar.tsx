@@ -1,12 +1,7 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
-import Dashboard from "../dashboard/Dashboard";
-import Personnel from "../personnellist/PersonnelList";
-import Operations from "../operations/Operations";
-import Analytics from "../analytics/Analytics";
-import Communications from "../communications/Communications";
-import Archives from "../archives/Archives";
-import Settings from "../settings/Settings";
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 // Particle component for animated background
 const Particles = () => {
@@ -50,117 +45,15 @@ const FloatingHex = () => {
   );
 };
 
-// Loading animation component
-const LoadingAnimation = () => {
-  return (
-    <div className="flex flex-col items-center justify-center h-64">
-      <div className="relative">
-        <div className="w-20 h-20 border-4 border-cyan-500/30 rounded-full"></div>
-        <div className="absolute top-0 left-0 w-20 h-20 border-4 border-t-cyan-500 rounded-full animate-spin"></div>
-      </div>
-      <p className="mt-4 text-cyan-500 text-sm tracking-widest">LOADING SECTION...</p>
-      <div className="mt-2 flex gap-1">
-        <div className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse"></div>
-        <div className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-        <div className="w-2 h-2 bg-cyan-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-      </div>
-    </div>
-  );
-};
-
-// Employee data
-const employeeData = {
-  id: "EMP-2026-0847",
-  name: "COMMANDER SARAH J. MITCHELL",
-  designation: "SENIOR TACTICAL OPERATIONS SPECIALIST",
-  department: "STRATEGIC COMMAND DIVISION",
-  clearanceLevel: "OMEGA-7",
-  status: "ACTIVE",
-  bloodType: "O-NEGATIVE",
-  dob: "1989-03-15",
-  height: "5'9\" / 175cm",
-  weight: "145 lbs / 66kg",
-  eyeColor: "BLUE",
-  hairColor: "BROWN",
-  nationality: "UNITED FEDERATION",
-  joinDate: "2015-06-22",
-  lastActive: "2026-01-12 14:32:07",
-  biometricId: "BIO-9X7K-MITCH-2847",
-  skills: [
-    { name: "Combat Tactics", level: 95 },
-    { name: "Strategic Planning", level: 92 },
-    { name: "Weapons Systems", level: 88 },
-    { name: "Leadership", level: 97 },
-    { name: "Crisis Management", level: 91 },
-  ],
-  certifications: [
-    "Advanced Combat Training",
-    "Zero-G Operations",
-    "Hazmat Response",
-    "Cybersecurity Protocol",
-    "Emergency Medical",
-  ],
-  projects: [
-    {
-      id: "PRJ-001",
-      name: "OPERATION NIGHTFALL",
-      status: "IN PROGRESS",
-      progress: 67,
-      priority: "HIGH",
-      deadline: "2026-02-15",
-      team: 12,
-      description: "Classified tactical operation - Alpha sector deployment",
-    },
-    {
-      id: "PRJ-002",
-      name: "PROJECT PHOENIX",
-      status: "IN PROGRESS",
-      progress: 45,
-      priority: "CRITICAL",
-      deadline: "2026-03-01",
-      team: 8,
-      description: "System reconstruction and protocol upgrade initiative",
-    },
-    {
-      id: "PRJ-003",
-      name: "SENTINEL PROTOCOL",
-      status: "PENDING REVIEW",
-      progress: 89,
-      priority: "MEDIUM",
-      deadline: "2026-01-30",
-      team: 5,
-      description: "Security enhancement and threat assessment program",
-    },
-    {
-      id: "PRJ-004",
-      name: "AURORA INITIATIVE",
-      status: "COMPLETED",
-      progress: 100,
-      priority: "LOW",
-      deadline: "2026-01-10",
-      team: 3,
-      description: "Training simulation and personnel evaluation",
-    },
-  ],
-  serviceRecord: [
-    { year: "2015", event: "Enlisted - Basic Training Completed" },
-    { year: "2017", event: "Promoted to Lieutenant" },
-    { year: "2019", event: "Special Operations Certification" },
-    { year: "2021", event: "Promoted to Commander" },
-    { year: "2023", event: "Awarded Medal of Distinction" },
-    { year: "2025", event: "Assigned to Strategic Command" },
-  ],
-};
-
 // Sidebar menu items
 const menuItems = [
-  { icon: "◈", label: "DASHBOARD", id: "dashboard" },
-  { icon: "◉", label: "PERSONNEL", id: "personnel" },
-  { icon: "◇", label: "OPERATIONS", id: "operations" },
-  { icon: "△", label: "ANALYTICS", id: "analytics" },
-  { icon: "□", label: "COMMUNICATIONS", id: "comms" },
-  { icon: "○", label: "ARCHIVES", id: "archives" },
-  { icon: "⬡", label: "SETTINGS", id: "settings" },
+  { icon: "◈", label: "DASHBOARD", id: "dashboard", path: "/dashboard" },
+  { icon: "◉", label: "PERSONNEL", id: "personnel", path: "/personnellist" },
+  { icon: "◇", label: "OPERATIONS", id: "operations", path: "/operations" },
+  { icon: "△", label: "ANALYTICS", id: "analytics", path: "/analytics" },
+  { icon: "□", label: "COMMUNICATIONS", id: "comms", path: "/communications" },
+  { icon: "○", label: "ARCHIVES", id: "archives", path: "/archives" },
+  { icon: "⬡", label: "SETTINGS", id: "settings", path: "/settings" },
 ];
 
 // System status data
@@ -173,23 +66,21 @@ const systemStatus = [
 
 // Header titles for each section
 const sectionTitles: Record<string, string> = {
-  dashboard: "COMMAND CENTER OVERVIEW",
-  personnel: "PERSONNEL DATABASE ACCESS",
-  operations: "TACTICAL OPERATIONS CENTER",
-  analytics: "DATA ANALYTICS TERMINAL",
-  comms: "SECURE COMMUNICATIONS HUB",
-  archives: "CLASSIFIED ARCHIVES ACCESS",
-  settings: "SYSTEM CONFIGURATION",
+  "/dashboard": "COMMAND CENTER OVERVIEW",
+  "/personnellist": "PERSONNEL DATABASE ACCESS",
+  "/operations": "TACTICAL OPERATIONS CENTER",
+  "/analytics": "DATA ANALYTICS TERMINAL",
+  "/communications": "SECURE COMMUNICATIONS HUB",
+  "/archives": "CLASSIFIED ARCHIVES ACCESS",
+  "/settings": "SYSTEM CONFIGURATION",
 };
 
-export default function Home() {
-  const [activeMenu, setActiveMenu] = useState("dashboard");
+export default function Sidebar({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isLoaded, setIsLoaded] = useState(false);
   const [glitchText, setGlitchText] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isReloading, setIsReloading] = useState(false);
-  const [currentContent, setCurrentContent] = useState("dashboard");
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
@@ -215,44 +106,7 @@ export default function Home() {
     return date.toISOString().split("T")[0].replace(/-/g, ".");
   };
 
-  const handleMenuClick = (menuId: string) => {
-    if (menuId === currentContent) {
-      // If clicking the same menu, show reload effect
-      setIsReloading(true);
-      setTimeout(() => {
-        setIsReloading(false);
-      }, 1200);
-    } else {
-      // If clicking a different menu, show loading then switch content
-      setIsReloading(true);
-      setTimeout(() => {
-        setActiveMenu(menuId);
-        setCurrentContent(menuId);
-        setIsReloading(false);
-      }, 800);
-    }
-  };
-
-  const renderContent = () => {
-    switch (activeMenu) {
-      case "dashboard":
-        return <Dashboard employeeData={employeeData} />;
-      case "personnel":
-        return <Personnel employeeData={employeeData} />;
-      case "operations":
-        return <Operations />;
-      case "analytics":
-        return <Analytics />;
-      case "comms":
-        return <Communications />;
-      case "archives":
-        return <Archives />;
-      case "settings":
-        return <Settings />;
-      default:
-        return <Dashboard employeeData={employeeData} />;
-    }
-  };
+  const currentTitle = sectionTitles[pathname] || "NEXUS COMMAND SYSTEM";
 
   return (
     <div className="scanlines min-h-screen bg-[#050508] grid-bg hex-pattern">
@@ -328,26 +182,27 @@ export default function Home() {
             MAIN NAVIGATION
           </p>
           <ul className="space-y-2">
-            {menuItems.map((item, index) => (
-              <li key={item.id} className={`fade-in-left stagger-${index + 1}`}>
-                <button
-                  onClick={() => {
-                    handleMenuClick(item.id);
-                    setIsSidebarOpen(false); // Close sidebar after selection
-                  }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded transition-all duration-300 hover-lift cyber-btn ${activeMenu === item.id
-                    ? "glass glow-border text-cyan-400 border-cyan-500/50"
-                    : "text-gray-400 hover:text-cyan-400 hover:bg-cyan-500/10"
-                    }`}
-                >
-                  <span className={`text-lg ${activeMenu === item.id ? 'animate-pulse-glow' : ''}`}>{item.icon}</span>
-                  <span className="text-sm tracking-wider">{item.label}</span>
-                  {activeMenu === item.id && (
-                    <span className="ml-auto w-1.5 h-1.5 bg-cyan-500 rounded-full animate-pulse-glow" />
-                  )}
-                </button>
-              </li>
-            ))}
+            {menuItems.map((item, index) => {
+              const isActive = pathname === item.path;
+              return (
+                <li key={item.id} className={`fade-in-left stagger-${index + 1}`}>
+                  <Link
+                    href={item.path}
+                    onClick={() => setIsSidebarOpen(false)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded transition-all duration-300 hover-lift cyber-btn ${isActive
+                        ? "glass glow-border text-cyan-400 border-cyan-500/50"
+                        : "text-gray-400 hover:text-cyan-400 hover:bg-cyan-500/10"
+                      }`}
+                  >
+                    <span className={`text-lg ${isActive ? 'animate-pulse-glow' : ''}`}>{item.icon}</span>
+                    <span className="text-sm tracking-wider">{item.label}</span>
+                    {isActive && (
+                      <span className="ml-auto w-1.5 h-1.5 bg-cyan-500 rounded-full animate-pulse-glow" />
+                    )}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
@@ -404,8 +259,8 @@ export default function Home() {
               </span>
             </div>
             <div className="h-4 w-px bg-cyan-500/30" />
-            <span className={`text-sm text-white tracking-wider ${glitchText ? 'glitch' : ''}`} data-text={sectionTitles[activeMenu]}>
-              {sectionTitles[activeMenu]}
+            <span className={`text-sm text-white tracking-wider ${glitchText ? 'glitch' : ''}`} data-text={currentTitle}>
+              {currentTitle}
             </span>
           </div>
           <div className="flex items-center gap-4">
@@ -418,9 +273,9 @@ export default function Home() {
           </div>
         </header>
 
-        {/* Dynamic Content with transition */}
-        <div className={`fade-in-up ${isReloading ? 'opacity-50' : ''}`} key={activeMenu}>
-          {isReloading ? <LoadingAnimation /> : renderContent()}
+        {/* Dynamic Content - Children from Next.js routing */}
+        <div className="fade-in-up">
+          {children}
         </div>
 
         {/* Data Stream Footer */}
